@@ -3,140 +3,144 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CSS Magic Show</title>
+  <title>CSS Pac-Man Simulation</title>
   <style>
-    * {
+    body {
+      background-color: black;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Arial', sans-serif;
-      height: 100vh;
-      background: linear-gradient(135deg, #ff7e5f, #feb47b);
-      color: white;
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
-      overflow: hidden;
+      height: 100vh;
     }
-    .title {
-      font-size: 4em;
-      text-align: center;
-      margin: 20px;
-      animation: textAnimation 3s infinite alternate;
-    }
-    .title:hover {
-      color: #ffcc00;
-      transform: scale(1.2) rotate(-5deg);
-      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
-    }
-    @keyframes textAnimation {
-      0% {
-        transform: translateY(0);
-      }
-      100% {
-        transform: translateY(-20px);
-      }
-    }
-    /* 3D Cube */
-    .cube {
-      width: 150px;
-      height: 150px;
+
+    .game-board {
+      width: 400px;
+      height: 400px;
       position: relative;
-      transform-style: preserve-3d;
-      animation: rotateCube 5s infinite linear;
-      margin: 50px 0;
-    }
-    .cube div {
-      position: absolute;
-      width: 150px;
-      height: 150px;
-      background-color: rgba(0, 0, 0, 0.5);
-      border: 2px solid white;
-    }
-    .cube .front {
-      transform: translateZ(75px);
-      background-color: #3498db;
-    }
-    .cube .back {
-      transform: rotateY(180deg) translateZ(75px);
-      background-color: #e74c3c;
-    }
-    .cube .left {
-      transform: rotateY(-90deg) translateX(-75px);
-      background-color: #2ecc71;
-    }
-    .cube .right {
-      transform: rotateY(90deg) translateX(75px);
-      background-color: #f39c12;
-    }
-    .cube .top {
-      transform: rotateX(90deg) translateY(-75px);
-      background-color: #9b59b6;
-    }
-    .cube .bottom {
-      transform: rotateX(-90deg) translateY(75px);
-      background-color: #34495e;
-    }
-    @keyframes rotateCube {
-      0% { transform: rotateX(0) rotateY(0); }
-      100% { transform: rotateX(360deg) rotateY(360deg); }
-    }
-    /* Maze */
-    .maze {
+      background-color: #212121;
+      border: 10px solid yellow;
+      border-radius: 15px;
       display: grid;
-      grid-template-columns: repeat(10, 50px);
-      grid-gap: 5px;
-      margin: 20px;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(10, 1fr);
     }
-    .maze div {
+
+    .pacman {
       width: 50px;
       height: 50px;
-      background-color: rgba(255, 255, 255, 0.3);
-      border: 2px solid white;
-      transition: background-color 0.3s ease;
-    }
-    .maze div:hover {
-      background-color: #ff7e5f;
-    }
-    /* Dynamic Background with Particle Effect */
-    .background {
+      background-color: yellow;
+      border-radius: 50%;
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, rgba(0, 0, 0, 0.7) 10%, transparent 80%);
-      animation: particleEffect 20s infinite linear;
-      z-index: -1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: pacmanMove 5s infinite linear;
     }
-    @keyframes particleEffect {
+
+    @keyframes pacmanMove {
       0% {
-        background: radial-gradient(circle, rgba(0, 0, 0, 0.7) 10%, transparent 80%);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+      25% {
+        top: 10%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(90deg);
+      }
+      50% {
+        top: 50%;
+        left: 90%;
+        transform: translate(-50%, -50%) rotate(180deg);
+      }
+      75% {
+        top: 90%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(270deg);
       }
       100% {
-        background: radial-gradient(circle, rgba(0, 0, 0, 0.3) 10%, transparent 80%);
+        top: 50%;
+        left: 10%;
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
+    .ghost {
+      width: 40px;
+      height: 40px;
+      background-color: red;
+      border-radius: 50%;
+      position: absolute;
+      animation: ghostMove 3s infinite linear;
+    }
+
+    @keyframes ghostMove {
+      0% {
+        top: 10%;
+        left: 10%;
+      }
+      25% {
+        top: 90%;
+        left: 10%;
+      }
+      50% {
+        top: 90%;
+        left: 90%;
+      }
+      75% {
+        top: 10%;
+        left: 90%;
+      }
+      100% {
+        top: 10%;
+        left: 10%;
+      }
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      background-color: white;
+      border-radius: 50%;
+      position: absolute;
+      animation: dotMove 5s infinite linear;
+    }
+
+    @keyframes dotMove {
+      0% {
+        top: 20%;
+        left: 20%;
+      }
+      25% {
+        top: 20%;
+        left: 80%;
+      }
+      50% {
+        top: 80%;
+        left: 80%;
+      }
+      75% {
+        top: 80%;
+        left: 20%;
+      }
+      100% {
+        top: 20%;
+        left: 20%;
       }
     }
   </style>
 </head>
 <body>
-  <div class="background"></div>
-  <h1 class="title">Welcome to the CSS Magic</h1>
-  <div class="cube">
-    <div class="front"></div>
-    <div class="back"></div>
-    <div class="left"></div>
-    <div class="right"></div>
-    <div class="top"></div>
-    <div class="bottom"></div>
-  </div>
-  <div class="maze">
-    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+  <div class="game-board">
+    <div class="pacman"></div>
+    <div class="ghost"></div>
+    <div class="ghost" style="animation-delay: 1s;"></div>
+    <div class="ghost" style="animation-delay: 2s;"></div>
+    <div class="dot"></div>
+    <div class="dot" style="animation-delay: 1s;"></div>
+    <div class="dot" style="animation-delay: 2s;"></div>
   </div>
 </body>
 </html>
