@@ -1,253 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Chauhan Maths Classes</title>
-    <style>
-        /* General Theme */
-        :root {
-            --bg-color: #f4f1ed;
-            --text-color: #4b3621;
-            --header-bg: #5c3d2e;
-            --card-bg: #fff;
-            --button-bg: #4b3621;
-            --button-hover: #6e4a39;
-        }
-
-        [data-theme="dark"] {
-            --bg-color: #2c2c2c;
-            --text-color: #e0e0e0;
-            --header-bg: #1a1a1a;
-            --card-bg: #333;
-            --button-bg: #444;
-            --button-hover: #666;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background-color: var(--header-bg);
-            padding: 20px;
-            color: #fff;
-            text-align: center;
-            font-size: 1.5rem;
-            letter-spacing: 2px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .dark-mode-toggle {
-            background-color: var(--button-bg);
-            color: #fff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        .dark-mode-toggle:hover {
-            background-color: var(--button-hover);
-        }
-
-        .hero {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 70vh;
-            background: linear-gradient(to right, #6e4a39, #b68c5a);
-            color: #fff;
-            text-align: center;
-            animation: fadeIn 1.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin: 0;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin: 10px 0;
-        }
-
-        .button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: var(--button-bg);
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        .button:hover {
-            background-color: var(--button-hover);
-        }
-
-        section {
-            padding: 40px;
-            animation: slideUp 1s ease-in-out;
-        }
-
-        @keyframes slideUp {
-            0% {
-                transform: translateY(30px);
-                opacity: 0;
-            }
-            100% {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .features {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .feature-card {
-            flex: 1;
-            min-width: 250px;
-            background: var(--card-bg);
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            transition: transform 0.3s, background-color 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: scale(1.05);
-        }
-
-        .feature-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-
-        footer {
-            background-color: var(--header-bg);
-            color: #fff;
-            padding: 10px;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-
-        .map {
-            margin: 40px 0;
-            text-align: center;
-        }
-
-        .map iframe {
-            width: 100%;
-            height: 300px;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive CSS Magic</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      overflow: hidden;
+      font-family: 'Arial', sans-serif;
+      color: white;
+    }
+    .container {
+      text-align: center;
+    }
+    h1 {
+      font-size: 4em;
+      margin: 0;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: inline-block;
+      border-radius: 10px;
+      position: relative;
+      animation: textAnimation 3s infinite alternate;
+    }
+    h1:hover {
+      color: #ffcc00;
+      transform: rotate(10deg) scale(1.1);
+      text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+    }
+    .maze {
+      display: grid;
+      grid-template-columns: repeat(10, 50px);
+      grid-gap: 2px;
+      margin-top: 20px;
+      position: relative;
+    }
+    .maze div {
+      width: 50px;
+      height: 50px;
+      background-color: rgba(255, 255, 255, 0.3);
+      border: 1px solid white;
+      transition: background-color 0.3s ease;
+    }
+    .maze div:hover {
+      background-color: #ff7e5f;
+    }
+    .art {
+      width: 100px;
+      height: 100px;
+      margin: 20px auto;
+      background-color: #2c3e50;
+      border-radius: 50%;
+      animation: rotateCircle 5s infinite linear;
+    }
+    .background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(0, 0, 0, 0.7) 10%, transparent 80%);
+      animation: backgroundShift 15s infinite alternate;
+      z-index: -1;
+    }
+    @keyframes rotateCircle {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes backgroundShift {
+      0% {
+        background: radial-gradient(circle, rgba(0, 0, 0, 0.7) 10%, transparent 80%);
+      }
+      100% {
+        background: radial-gradient(circle, rgba(0, 0, 0, 0.4) 10%, transparent 80%);
+      }
+    }
+    @keyframes textAnimation {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-20px);
+      }
+    }
+  </style>
 </head>
-
 <body>
-    <header>
-        <span>Chauhan Maths Classes</span>
-        <button class="dark-mode-toggle" onclick="toggleDarkMode()">Dark Mode</button>
-    </header>
-
-    <div class="hero">
-        <h1>Master Mathematics with Chauhan Classes</h1>
-        <p>Expert offline coaching for Class 11th and 12th students.</p>
-        <button class="button">Enroll Now</button>
+  <div class="background"></div>
+  <div class="container">
+    <h1>Welcome to the CSS World</h1>
+    <div class="art"></div>
+    <div class="maze">
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
     </div>
-
-    <section>
-        <h2>Why Choose Us?</h2>
-        <div class="features">
-            <div class="feature-card">
-                <img src="" alt="Expert Teachers">
-                <h3>Expert Teachers</h3>
-                <p>Our experienced teachers ensure in-depth understanding and conceptual clarity.</p>
-            </div>
-            <div class="feature-card">
-                <img src="" alt="Interactive Classes">
-                <h3>Interactive Offline Classes</h3>
-                <p>Engaging classroom sessions designed for better focus and learning.</p>
-            </div>
-            <div class="feature-card">
-                <img src="" alt="Doubt Clearing">
-                <h3>Dedicated Doubt Sessions</h3>
-                <p>Individual attention for resolving doubts and boosting confidence.</p>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <h2>Our Courses</h2>
-        <div class="features">
-            <div class="feature-card">
-                <img src="" alt="Class 11 Math">
-                <h3>Class 11 Mathematics</h3>
-                <p>Comprehensive coverage of NCERT syllabus with additional practice problems.</p>
-            </div>
-            <div class="feature-card">
-                <img src="" alt="Class 12 Math">
-                <h3>Class 12 Mathematics</h3>
-                <p>Expert preparation for board exams and competitive tests.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="map">
-        <h2>Find Us Here</h2>
-        <!-- Map Placeholder -->
-        <iframe src="" title="Location Map"></iframe>
-        <p>Update the map with the exact location of Chauhan Maths Classes.</p>
-    </section>
-
-    <footer>
-        © 2024 Chauhan Maths Classes | All Rights Reserved
-    </footer>
-
-    <script>
-        function toggleDarkMode() {
-            const theme = document.documentElement.getAttribute("data-theme");
-            document.documentElement.setAttribute("data-theme", theme === "dark" ? "light" : "dark");
-        }
-    </script>
+  </div>
 </body>
-
 </html>
