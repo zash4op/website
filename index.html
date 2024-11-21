@@ -8,16 +8,34 @@
     <title>Chauhan Maths Classes</title>
     <style>
         /* General Theme */
+        :root {
+            --bg-color: #f4f1ed;
+            --text-color: #4b3621;
+            --header-bg: #5c3d2e;
+            --card-bg: #fff;
+            --button-bg: #4b3621;
+            --button-hover: #6e4a39;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #2c2c2c;
+            --text-color: #e0e0e0;
+            --header-bg: #1a1a1a;
+            --card-bg: #333;
+            --button-bg: #444;
+            --button-hover: #666;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f4f1ed;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
             padding: 0;
-            color: #4b3621;
         }
 
         header {
-            background-color: #5c3d2e;
+            background-color: var(--header-bg);
             padding: 20px;
             color: #fff;
             text-align: center;
@@ -27,6 +45,24 @@
             top: 0;
             z-index: 10;
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dark-mode-toggle {
+            background-color: var(--button-bg);
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .dark-mode-toggle:hover {
+            background-color: var(--button-hover);
         }
 
         .hero {
@@ -65,7 +101,7 @@
         .button {
             margin-top: 20px;
             padding: 10px 20px;
-            background-color: #4b3621;
+            background-color: var(--button-bg);
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -75,7 +111,7 @@
         }
 
         .button:hover {
-            background-color: #6e4a39;
+            background-color: var(--button-hover);
         }
 
         section {
@@ -104,11 +140,11 @@
         .feature-card {
             flex: 1;
             min-width: 250px;
-            background: #fff;
+            background: var(--card-bg);
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             padding: 20px;
-            transition: transform 0.3s;
+            transition: transform 0.3s, background-color 0.3s;
         }
 
         .feature-card:hover {
@@ -124,7 +160,7 @@
         }
 
         footer {
-            background-color: #5c3d2e;
+            background-color: var(--header-bg);
             color: #fff;
             padding: 10px;
             text-align: center;
@@ -148,7 +184,8 @@
 
 <body>
     <header>
-        Chauhan Maths Classes - For Class 11th & 12th
+        <span>Chauhan Maths Classes</span>
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">Dark Mode</button>
     </header>
 
     <div class="hero">
@@ -204,6 +241,13 @@
     <footer>
         © 2024 Chauhan Maths Classes | All Rights Reserved
     </footer>
+
+    <script>
+        function toggleDarkMode() {
+            const theme = document.documentElement.getAttribute("data-theme");
+            document.documentElement.setAttribute("data-theme", theme === "dark" ? "light" : "dark");
+        }
+    </script>
 </body>
 
 </html>
