@@ -1,146 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CSS Pac-Man Simulation</title>
-  <style>
-    body {
-      background-color: black;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodge the Falling Objects</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #222;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-    .game-board {
-      width: 400px;
-      height: 400px;
-      position: relative;
-      background-color: #212121;
-      border: 10px solid yellow;
-      border-radius: 15px;
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      grid-template-rows: repeat(10, 1fr);
-    }
+        .game-container {
+            position: relative;
+            width: 500px;
+            height: 600px;
+            background-color: #444;
+            border: 2px solid white;
+            overflow: hidden;
+        }
 
-    .pacman {
-      width: 50px;
-      height: 50px;
-      background-color: yellow;
-      border-radius: 50%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: pacmanMove 5s infinite linear;
-    }
+        .player {
+            width: 50px;
+            height: 50px;
+            background-color: #00f;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 10px;
+        }
 
-    @keyframes pacmanMove {
-      0% {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(0deg);
-      }
-      25% {
-        top: 10%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(90deg);
-      }
-      50% {
-        top: 50%;
-        left: 90%;
-        transform: translate(-50%, -50%) rotate(180deg);
-      }
-      75% {
-        top: 90%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(270deg);
-      }
-      100% {
-        top: 50%;
-        left: 10%;
-        transform: translate(-50%, -50%) rotate(360deg);
-      }
-    }
+        .falling-object {
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            position: absolute;
+            top: -30px;
+            border-radius: 50%;
+        }
 
-    .ghost {
-      width: 40px;
-      height: 40px;
-      background-color: red;
-      border-radius: 50%;
-      position: absolute;
-      animation: ghostMove 3s infinite linear;
-    }
+        .score {
+            color: white;
+            font-size: 20px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
 
-    @keyframes ghostMove {
-      0% {
-        top: 10%;
-        left: 10%;
-      }
-      25% {
-        top: 90%;
-        left: 10%;
-      }
-      50% {
-        top: 90%;
-        left: 90%;
-      }
-      75% {
-        top: 10%;
-        left: 90%;
-      }
-      100% {
-        top: 10%;
-        left: 10%;
-      }
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      background-color: white;
-      border-radius: 50%;
-      position: absolute;
-      animation: dotMove 5s infinite linear;
-    }
-
-    @keyframes dotMove {
-      0% {
-        top: 20%;
-        left: 20%;
-      }
-      25% {
-        top: 20%;
-        left: 80%;
-      }
-      50% {
-        top: 80%;
-        left: 80%;
-      }
-      75% {
-        top: 80%;
-        left: 20%;
-      }
-      100% {
-        top: 20%;
-        left: 20%;
-      }
-    }
-  </style>
+        .game-over {
+            color: red;
+            font-size: 40px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <div class="game-board">
-    <div class="pacman"></div>
-    <div class="ghost"></div>
-    <div class="ghost" style="animation-delay: 1s;"></div>
-    <div class="ghost" style="animation-delay: 2s;"></div>
-    <div class="dot"></div>
-    <div class="dot" style="animation-delay: 1s;"></div>
-    <div class="dot" style="animation-delay: 2s;"></div>
-  </div>
+    <div class="game-container">
+        <div class="score" id="score">Score: 0</div>
+        <div class="player" id="player"></div>
+        <div class="game-over" id="gameOver">GAME OVER!</div>
+    </div>
+
+    <script>
+        // Game variables
+        let player = document.getElementById('player');
+        let gameContainer = document.querySelector('.game-container');
+        let scoreDisplay = document.getElementById('score');
+        let gameOverScreen = document.getElementById('gameOver');
+        let playerSpeed = 10;
+        let gameInterval;
+        let score = 0;
+
+        // Player position
+        let playerX = gameContainer.offsetWidth / 2 - player.offsetWidth / 2;
+
+        // Set initial player position
+        player.style.left = `${playerX}px`;
+
+        // Listen for keyboard events to move the player
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && playerX > 0) {
+                playerX -= playerSpeed;
+            } else if (e.key === 'ArrowRight' && playerX < gameContainer.offsetWidth - player.offsetWidth) {
+                playerX += playerSpeed;
+            }
+            player.style.left = `${playerX}px`;
+        });
+
+        // Function to create falling objects
+        function createFallingObject() {
+            let object = document.createElement('div');
+            object.classList.add('falling-object');
+            object.style.left = `${Math.random() * (gameContainer.offsetWidth - 30)}px`;
+            gameContainer.appendChild(object);
+            moveFallingObject(object);
+        }
+
+        // Function to move falling objects
+        function moveFallingObject(object) {
+            let objectY = 0;
+
+            let fallInterval = setInterval(() => {
+                objectY += 5;
+                object.style.top = `${objectY}px`;
+
+                // Check for collision with player
+                if (
+                    objectY + 30 >= gameContainer.offsetHeight - 50 &&
+                    objectX < playerX + 50 &&
+                    objectX + 30 > playerX
+                ) {
+                    clearInterval(fallInterval);
+                    gameOver();
+                }
+
+                // Remove object if it goes off the screen
+                if (objectY >= gameContainer.offsetHeight) {
+                    clearInterval(fallInterval);
+                    gameContainer.removeChild(object);
+                    score += 1;
+                    scoreDisplay.textContent = `Score: ${score}`;
+                }
+            }, 20);
+        }
+
+        // Function to start the game
+        function startGame() {
+            gameInterval = setInterval(() => {
+                createFallingObject();
+            }, 1000);
+        }
+
+        // Function to handle game over
+        function gameOver() {
+            clearInterval(gameInterval);
+            gameOverScreen.style.display = 'block';
+        }
+
+        // Start the game
+        startGame();
+    </script>
 </body>
 </html>
