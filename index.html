@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhatia Associates - Lubricant Oil Dealers</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <style>
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .hover-zoom:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s;
+        }
+
+        .btn-hover:hover {
+            background-color: #ff6a00;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+    <!-- Hero Section -->
+    <header class="relative bg-gray-900 text-white">
+        <div class="container mx-auto px-6 py-20 text-center fade-in">
+            <h1 class="text-4xl font-bold">Bhatia Associates</h1>
+            <p class="mt-4 text-lg">Trusted Lubricant Oil Dealers in Kanpur</p>
+            <a href="#contact" class="mt-6 inline-block px-6 py-3 bg-orange-500 text-white font-semibold rounded-lg btn-hover">Contact Us</a>
+        </div>
+        <img src="https://source.unsplash.com/1600x900/?oil,industry" alt="Lubricants" class="w-full h-64 object-cover absolute top-0 left-0 z-0 opacity-20">
+    </header>
+
+    <!-- About Section -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold">About Us</h2>
+            <p class="mt-4 text-gray-600">Bhatia Associates has been providing quality lubricant oils for over 30 years, serving industries and businesses with trust and reliability.</p>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="py-12 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center">Our Services</h2>
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white shadow-lg p-6 rounded-lg text-center hover-zoom">
+                    <img src="https://source.unsplash.com/300x300/?oil,product" alt="Oil Products" class="mx-auto w-32 h-32 rounded-full">
+                    <h3 class="mt-4 text-xl font-semibold">Oil Products</h3>
+                    <p class="text-gray-600">We provide high-quality lubricant oils tailored to your needs.</p>
+                </div>
+                <div class="bg-white shadow-lg p-6 rounded-lg text-center hover-zoom">
+                    <img src="https://source.unsplash.com/300x300/?industry,fuel" alt="Distributors" class="mx-auto w-32 h-32 rounded-full">
+                    <h3 class="mt-4 text-xl font-semibold">Distributorship</h3>
+                    <p class="text-gray-600">Exclusive distributorship options with competitive pricing.</p>
+                </div>
+                <div class="bg-white shadow-lg p-6 rounded-lg text-center hover-zoom">
+                    <img src="https://source.unsplash.com/300x300/?consulting,engineer" alt="Consultation" class="mx-auto w-32 h-32 rounded-full">
+                    <h3 class="mt-4 text-xl font-semibold">Consultation</h3>
+                    <p class="text-gray-600">Expert advice to select the right oil solutions for your business.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-12 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center">Get in Touch</h2>
+            <form class="mt-8 max-w-lg mx-auto bg-gray-100 p-6 rounded-lg shadow-md">
+                <div class="mb-4">
+                    <label for="name" class="block text-gray-600">Name</label>
+                    <input type="text" id="name" class="w-full mt-2 px-4 py-2 border rounded-lg" placeholder="Your Name">
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-600">Email</label>
+                    <input type="email" id="email" class="w-full mt-2 px-4 py-2 border rounded-lg" placeholder="Your Email">
+                </div>
+                <div class="mb-4">
+                    <label for="message" class="block text-gray-600">Message</label>
+                    <textarea id="message" class="w-full mt-2 px-4 py-2 border rounded-lg" rows="4" placeholder="Your Message"></textarea>
+                </div>
+                <button type="submit" class="w-full py-3 bg-orange-500 text-white font-bold rounded-lg btn-hover">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-6 text-center">
+        <p>&copy; 2024 Bhatia Associates. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>
