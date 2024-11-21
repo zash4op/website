@@ -3,20 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Exploration Game</title>
+    <title>3D Exploration Game with Mobs</title>
     <style>
         body, html { margin: 0; height: 100%; overflow: hidden; }
         canvas { display: block; }
+        #controller { position: absolute; bottom: 20px; left: 20px; z-index: 10; }
+        .button { width: 60px; height: 60px; margin: 10px; background-color: rgba(0, 0, 255, 0.6); color: white; border: none; font-size: 20px; border-radius: 50%; cursor: pointer; }
     </style>
 </head>
 <body>
+    <div id="controller">
+        <button class="button" id="moveForward">↑</button><br>
+        <button class="button" id="moveLeft">←</button>
+        <button class="button" id="moveRight">→</button><br>
+        <button class="button" id="moveBackward">↓</button><br>
+        <button class="button" id="jump">Jump</button>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <script>
         let scene, camera, renderer, controls, player, terrain, clock;
-        let mobileControlsEnabled = false;
+        let moveSpeed = 0.1, rotationSpeed = 0.02, jumpHeight = 1, gravity = 0.05, velocityY = 0;
+        let mobs = [], mobSpeed = 0.05;
         let isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-        let moveSpeed = 0.1;
-        let rotationSpeed = 0.02;
+        let mobileControlsEnabled = false;
+
+        // Sound Setup
+        const backgroundMusic = new Howl({
+            src: ['https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'],
+            autoplay: true,
+            loop: true,
+            volume: 0.5
+        });
+        const mobSound = new Howl({
+            src: ['https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'],
+            volume: 0.5
+        });
 
         // Setup scene, camera, and renderer
         function init() {
@@ -33,23 +55,25 @@
             // Lighting
             let ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
             scene.add(ambientLight);
-
             let directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1);
             directionalLight.position.set(10, 10, 10);
             scene.add(directionalLight);
 
-            // Add terrain
+            // Add terrain with texture
             createTerrain();
             
-            // Add a player (a simple cube as the player)
+            // Add player (box as a simple player)
             createPlayer();
+
+            // Add mobs to the game
+            createMobs();
 
             // Check for mobile controls
             if (isMobile) {
                 mobileControlsEnabled = true;
                 setupMobileControls();
             } else {
-                // Use mouse for camera rotation on desktop
+                // Use keyboard for desktop
                 window.addEventListener('keydown', onKeyDown);
             }
 
@@ -60,16 +84,18 @@
             animate();
         }
 
-        // Create terrain (simple flat ground)
+        // Create terrain with texture
         function createTerrain() {
             const terrainGeometry = new THREE.PlaneGeometry(500, 500, 50, 50);
-            const terrainMaterial = new THREE.MeshLambertMaterial({ color: 0x228B22, wireframe: false });
+            const terrainMaterial = new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('https://www.w3schools.com/w3images/forest.jpg')  // Texture for terrain
+            });
             terrain = new THREE.Mesh(terrainGeometry, terrainMaterial);
             terrain.rotation.x = -Math.PI / 2; // Make the terrain flat
             scene.add(terrain);
         }
 
-        // Create player (cube representing the player)
+        // Create player (cube or 3D model)
         function createPlayer() {
             const geometry = new THREE.BoxGeometry(1, 2, 1);
             const material = new THREE.MeshBasicMaterial({ color: 0x0000ff });
@@ -78,54 +104,89 @@
             scene.add(player);
         }
 
-        // Handle keydown event for desktop controls (WASD for movement)
+        // Create mobs
+        function createMobs() {
+            for (let i = 0; i < 5; i++) {
+                const geometry = new THREE.BoxGeometry(1, 1, 1);
+                const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+                const mob = new THREE.Mesh(geometry, material);
+                mob.position.set(Math.random() * 100 - 50, 0.5, Math.random() * 100 - 50);
+                scene.add(mob);
+                mobs.push(mob);
+            }
+        }
+
+        // Handle keyboard input for movement (WASD for desktop)
         function onKeyDown(event) {
             switch (event.key) {
-                case 'w':
+                case 'w': case 'ArrowUp':
                     player.position.z -= moveSpeed;
                     break;
-                case 's':
+                case 's': case 'ArrowDown':
                     player.position.z += moveSpeed;
                     break;
-                case 'a':
+                case 'a': case 'ArrowLeft':
                     player.position.x -= moveSpeed;
                     break;
-                case 'd':
+                case 'd': case 'ArrowRight':
                     player.position.x += moveSpeed;
                     break;
                 case ' ':
-                    player.position.y += moveSpeed; // Jump
+                    if (player.position.y <= 1) { // Jump when player is on the ground
+                        velocityY = jumpHeight;
+                    }
                     break;
             }
         }
 
-        // Mobile controls setup (touch events)
+        // Mobile controls using onscreen buttons
         function setupMobileControls() {
-            let touchStartX = 0, touchStartY = 0;
-            let touchMoveX = 0, touchMoveY = 0;
-
-            // Track touch start position
-            document.body.addEventListener('touchstart', (e) => {
-                touchStartX = e.touches[0].clientX;
-                touchStartY = e.touches[0].clientY;
-            });
-
-            // Track touch move position
-            document.body.addEventListener('touchmove', (e) => {
-                touchMoveX = e.touches[0].clientX;
-                touchMoveY = e.touches[0].clientY;
-
-                let deltaX = touchMoveX - touchStartX;
-                let deltaY = touchMoveY - touchStartY;
-
-                if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                    player.position.x += deltaX * 0.01; // Horizontal movement
-                } else {
-                    player.position.z -= deltaY * 0.01; // Forward/Backward movement
+            document.getElementById('moveForward').addEventListener('click', () => player.position.z -= moveSpeed);
+            document.getElementById('moveBackward').addEventListener('click', () => player.position.z += moveSpeed);
+            document.getElementById('moveLeft').addEventListener('click', () => player.position.x -= moveSpeed);
+            document.getElementById('moveRight').addEventListener('click', () => player.position.x += moveSpeed);
+            document.getElementById('jump').addEventListener('click', () => {
+                if (player.position.y <= 1) {
+                    velocityY = jumpHeight;
                 }
+            });
+        }
 
-                touchStartX = touchMoveX;
-                touchStartY = touchMoveY;
+        // Update player gravity and movement
+        function updatePlayer() {
+            // Gravity effect on player
+            if (player.position.y > 1) {
+                velocityY -= gravity;
+            } else {
+                velocityY = 0;
+                player.position.y = 1; // Prevent falling below ground level
+            }
+            player.position.y += velocityY; // Apply gravity
+        }
+
+        // Move mobs randomly
+        function moveMobs() {
+            mobs.forEach(mob => {
+                let mobDirection = Math.random() * 4;
+                if (mobDirection < 1) {
+                    mob.position.x += mobSpeed;
+                } else if (mobDirection < 2) {
+                    mob.position.x -= mobSpeed;
+                } else if (mobDirection < 3) {
+                    mob.position.z += mobSpeed;
+                } else {
+                    mob.position.z -= mobSpeed;
+                }
+            });
+        }
+
+        // Check for collision with mobs
+        function checkCollision() {
+            mobs.forEach(mob => {
+                const distance = player.position.distanceTo(mob.position);
+                if (distance < 2) { // Simple collision detection radius
+                    mobSound.play(); // Play sound on collision
+                }
             });
         }
 
@@ -140,13 +201,14 @@
         function animate() {
             requestAnimationFrame(animate);
             
-            // Camera rotation on desktop (using mouse movements)
-            if (!isMobile) {
-                const delta = clock.getDelta();
-                if (player) {
-                    camera.rotation.x += delta * rotationSpeed; // Camera rotation
-                }
-            }
+            // Update player physics
+            updatePlayer();
+            
+            // Move mobs
+            moveMobs();
+            
+            // Check for collisions
+            checkCollision();
 
             renderer.render(scene, camera);
         }
