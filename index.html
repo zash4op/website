@@ -19,101 +19,88 @@
             }
         }
 
-        @keyframes glow {
-            0%, 100% {
-                text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
-            }
-            50% {
-                text-shadow: 0 0 20px #ffdf00, 0 0 30px #ffdf00;
-            }
-        }
-
         .fade-in {
             animation: fadeIn 1s ease-in-out;
         }
 
         .btn-hover:hover {
-            background-color: #ffd700;
-            color: #111;
+            background-color: #4caf50;
+            color: black;
             transition: background-color 0.3s ease;
         }
 
-        .glowing-text {
-            animation: glow 2s infinite;
-        }
-
         .hover-highlight:hover {
-            background-color: rgba(255, 215, 0, 0.1);
+            background-color: rgba(76, 175, 80, 0.1);
             transition: background-color 0.3s ease-in-out;
         }
     </style>
 </head>
 
-<body class="bg-gray-900 text-gray-300">
+<body class="bg-black text-gray-300">
     <!-- Hero Section -->
-    <header class="relative bg-gray-800 text-white">
+    <header class="relative">
         <div class="container mx-auto px-6 py-20 text-center fade-in">
-            <h1 class="text-5xl font-bold glowing-text">Bhatia Associates</h1>
-            <p class="mt-4 text-lg">Your Trusted Lubricant Oil Dealer in Kanpur</p>
-            <a href="#contact" class="mt-6 inline-block px-6 py-3 bg-gray-700 text-white font-semibold rounded-lg btn-hover">Contact Us</a>
+            <h1 class="text-5xl font-bold text-green-500">Bhatia Associates</h1>
+            <p class="mt-4 text-lg text-gray-300">Your Trusted Lubricant Oil Dealer in Kanpur</p>
+            <a href="#contact" class="mt-6 inline-block px-6 py-3 bg-gray-800 text-green-500 font-semibold rounded-lg btn-hover">Contact Us</a>
         </div>
         <img src="https://images.unsplash.com/photo-1581092580491-31b90ff90b1c?crop=entropy&cs=tinysrgb&w=1600" 
-             alt="Lubricants Hero Image" class="w-full h-64 object-cover opacity-25">
+             alt="Lubricants Hero Image" class="w-full h-64 object-cover opacity-20">
     </header>
 
     <!-- About Section -->
-    <section class="py-12 bg-gray-800">
+    <section class="py-12 bg-gray-900">
         <div class="container mx-auto px-6 text-center">
-            <h2 class="text-3xl font-bold fade-in text-gray-200">About Us</h2>
-            <p class="mt-4 text-gray-400 fade-in">For over 30 years, we have delivered quality lubricant oils to industries with trust and reliability. Our commitment is to offer premium products and excellent service.</p>
+            <h2 class="text-3xl font-bold text-green-500 fade-in">About Us</h2>
+            <p class="mt-4 text-gray-300 fade-in">For over 30 years, we have delivered quality lubricant oils to industries with trust and reliability. Our commitment is to offer premium products and excellent service.</p>
         </div>
     </section>
 
     <!-- Services Section -->
-    <section class="py-12 bg-gray-900">
+    <section class="py-12 bg-black">
         <div class="container mx-auto px-6">
-            <h2 class="text-3xl font-bold text-center fade-in text-gray-200">Our Services</h2>
+            <h2 class="text-3xl font-bold text-center text-green-500 fade-in">Our Services</h2>
             <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-gray-800 shadow-lg p-6 rounded-lg text-center hover-highlight">
+                <div class="bg-gray-900 shadow-lg p-6 rounded-lg text-center hover-highlight">
                     <img src="https://images.unsplash.com/photo-1509474520651-59645c1dcaf8?crop=entropy&cs=tinysrgb&w=300" 
                          alt="Oil Products" class="mx-auto w-32 h-32 rounded-full">
-                    <h3 class="mt-4 text-xl font-semibold text-gray-200">Oil Products</h3>
-                    <p class="text-gray-400">Premium quality oils for industrial and automotive needs.</p>
+                    <h3 class="mt-4 text-xl font-semibold text-green-500">Oil Products</h3>
+                    <p class="text-gray-300">Premium quality oils for industrial and automotive needs.</p>
                 </div>
-                <div class="bg-gray-800 shadow-lg p-6 rounded-lg text-center hover-highlight">
+                <div class="bg-gray-900 shadow-lg p-6 rounded-lg text-center hover-highlight">
                     <img src="https://images.unsplash.com/photo-1581093588400-9f35d292a2da?crop=entropy&cs=tinysrgb&w=300" 
                          alt="Distributorship" class="mx-auto w-32 h-32 rounded-full">
-                    <h3 class="mt-4 text-xl font-semibold text-gray-200">Distributorship</h3>
-                    <p class="text-gray-400">Become our exclusive distributor for unmatched service.</p>
+                    <h3 class="mt-4 text-xl font-semibold text-green-500">Distributorship</h3>
+                    <p class="text-gray-300">Become our exclusive distributor for unmatched service.</p>
                 </div>
-                <div class="bg-gray-800 shadow-lg p-6 rounded-lg text-center hover-highlight">
+                <div class="bg-gray-900 shadow-lg p-6 rounded-lg text-center hover-highlight">
                     <img src="https://images.unsplash.com/photo-1581092160073-4188e0d0c9a8?crop=entropy&cs=tinysrgb&w=300" 
                          alt="Consultation" class="mx-auto w-32 h-32 rounded-full">
-                    <h3 class="mt-4 text-xl font-semibold text-gray-200">Consultation</h3>
-                    <p class="text-gray-400">Expert advice on selecting the right oil solutions.</p>
+                    <h3 class="mt-4 text-xl font-semibold text-green-500">Consultation</h3>
+                    <p class="text-gray-300">Expert advice on selecting the right oil solutions.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-12 bg-gray-800">
+    <section id="contact" class="py-12 bg-gray-900">
         <div class="container mx-auto px-6">
-            <h2 class="text-3xl font-bold text-center fade-in text-gray-200">Get in Touch</h2>
-            <form class="mt-8 max-w-lg mx-auto bg-gray-900 p-6 rounded-lg shadow-md">
+            <h2 class="text-3xl font-bold text-center text-green-500 fade-in">Get in Touch</h2>
+            <form class="mt-8 max-w-lg mx-auto bg-black p-6 rounded-lg shadow-md">
                 <div class="mb-4">
-                    <label for="name" class="block text-gray-400">Name</label>
-                    <input type="text" id="name" class="w-full mt-2 px-4 py-2 border border-gray-700 bg-gray-800 text-gray-300 rounded-lg" placeholder="Your Name">
+                    <label for="name" class="block text-gray-300">Name</label>
+                    <input type="text" id="name" class="w-full mt-2 px-4 py-2 border border-gray-700 bg-gray-900 text-gray-300 rounded-lg" placeholder="Your Name">
                 </div>
                 <div class="mb-4">
-                    <label for="email" class="block text-gray-400">Email</label>
-                    <input type="email" id="email" class="w-full mt-2 px-4 py-2 border border-gray-700 bg-gray-800 text-gray-300 rounded-lg" placeholder="Your Email">
+                    <label for="email" class="block text-gray-300">Email</label>
+                    <input type="email" id="email" class="w-full mt-2 px-4 py-2 border border-gray-700 bg-gray-900 text-gray-300 rounded-lg" placeholder="Your Email">
                 </div>
                 <div class="mb-4">
-                    <label for="message" class="block text-gray-400">Message</label>
-                    <textarea id="message" class="w-full mt-2 px-4 py-2 border border-gray-700 bg-gray-800 text-gray-300 rounded-lg" rows="4" placeholder="Your Message"></textarea>
+                    <label for="message" class="block text-gray-300">Message</label>
+                    <textarea id="message" class="w-full mt-2 px-4 py-2 border border-gray-700 bg-gray-900 text-gray-300 rounded-lg" rows="4" placeholder="Your Message"></textarea>
                 </div>
-                <button type="submit" class="w-full py-3 bg-gray-700 text-gray-200 font-bold rounded-lg btn-hover">Send Message</button>
+                <button type="submit" class="w-full py-3 bg-gray-800 text-green-500 font-bold rounded-lg btn-hover">Send Message</button>
             </form>
         </div>
     </section>
@@ -125,4 +112,5 @@
 </body>
 
 </html>
+
 
