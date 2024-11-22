@@ -14,11 +14,14 @@
             height: 100vh;
             background-color: #70c5ce;
             flex-direction: column;
+            overflow: hidden;
         }
 
         canvas {
             background-color: #f2f2f2;
             border: 2px solid #000;
+            display: block;
+            margin: 0 auto;
         }
 
         .leaderboard {
@@ -26,8 +29,9 @@
             padding: 10px;
             border: 1px solid #000;
             background-color: #fff;
-            width: 320px;
+            width: 80%;
             font-family: Arial, sans-serif;
+            text-align: center;
         }
 
         .leaderboard h3 {
@@ -43,6 +47,13 @@
         .leaderboard li {
             font-size: 16px;
         }
+
+        .quote {
+            margin-top: 20px;
+            font-style: italic;
+            font-size: 20px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -51,14 +62,15 @@
         <h3>Leaderboard</h3>
         <ul id="leaderboardList"></ul>
     </div>
+    <div id="quote" class="quote"></div>
     <canvas id="gameCanvas"></canvas>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Set canvas dimensions
-        canvas.width = 320;
-        canvas.height = 480;
+        // Set responsive canvas dimensions
+        canvas.width = window.innerWidth * 0.8;  // 80% of the screen width
+        canvas.height = window.innerHeight * 0.6; // 60% of the screen height
 
         // Game Variables
         let bird = {
@@ -81,6 +93,15 @@
 
         let playerName = '';
         let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+        let highScore = parseInt(localStorage.getItem('highScore')) || 0;
+        
+        const quotes = [
+            "The best way to predict the future is to create it.",
+            "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+            "Don't wait. The time will never be just right.",
+            "Believe you can and you're halfway there.",
+            "You are never too old to set another goal or to dream a new dream."
+        ];
 
         // Ask for the player's name when the page loads
         function askForName() {
@@ -113,11 +134,22 @@
             });
         }
 
-        // Event listener for jumping
-        document.addEventListener('keydown', () => {
+        // Display a random quote when a new highscore is reached
+        function displayQuote() {
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById('quote').textContent = `"${randomQuote}"`;
+        }
+
+        // Event listener for jumping (touch event)
+        document.addEventListener('touchstart', () => {
             if (!gameOver) {
                 bird.velocity = bird.lift;
             } else {
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('highScore', highScore);
+                    displayQuote();
+                }
                 updateLeaderboard();
                 askForName();
             }
@@ -182,7 +214,7 @@
 
             if (gameOver) {
                 ctx.fillText('Game Over', canvas.width / 2 - 60, canvas.height / 2);
-                ctx.fillText('Press any key to restart', canvas.width / 2 - 90, canvas.height / 2 + 30);
+                ctx.fillText('Tap to restart', canvas.width / 2 - 90, canvas.height / 2 + 30);
             }
 
             requestAnimationFrame(gameLoop);
