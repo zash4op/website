@@ -3,218 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Exploration Game with Mobs</title>
+    <title>Flappy Bird Game</title>
     <style>
-        body, html { margin: 0; height: 100%; overflow: hidden; }
-        canvas { display: block; }
-        #controller { position: absolute; bottom: 20px; left: 20px; z-index: 10; }
-        .button { width: 60px; height: 60px; margin: 10px; background-color: rgba(0, 0, 255, 0.6); color: white; border: none; font-size: 20px; border-radius: 50%; cursor: pointer; }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #70c5ce;
+            flex-direction: column;
+        }
+
+        canvas {
+            background-color: #f2f2f2;
+            border: 2px solid #000;
+        }
+
+        .leaderboard {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #000;
+            background-color: #fff;
+            width: 320px;
+            font-family: Arial, sans-serif;
+        }
+
+        .leaderboard h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .leaderboard ul {
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .leaderboard li {
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
-    <div id="controller">
-        <button class="button" id="moveForward">↑</button><br>
-        <button class="button" id="moveLeft">←</button>
-        <button class="button" id="moveRight">→</button><br>
-        <button class="button" id="moveBackward">↓</button><br>
-        <button class="button" id="jump">Jump</button>
+    <h1>Flappy Bird Game</h1>
+    <div class="leaderboard">
+        <h3>Leaderboard</h3>
+        <ul id="leaderboardList"></ul>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <canvas id="gameCanvas"></canvas>
     <script>
-        let scene, camera, renderer, controls, player, terrain, clock;
-        let moveSpeed = 0.1, rotationSpeed = 0.02, jumpHeight = 1, gravity = 0.05, velocityY = 0;
-        let mobs = [], mobSpeed = 0.05;
-        let isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-        let mobileControlsEnabled = false;
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
 
-        // Sound Setup
-        const backgroundMusic = new Howl({
-            src: ['https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'],
-            autoplay: true,
-            loop: true,
-            volume: 0.5
-        });
-        const mobSound = new Howl({
-            src: ['https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'],
-            volume: 0.5
-        });
+        // Set canvas dimensions
+        canvas.width = 320;
+        canvas.height = 480;
 
-        // Setup scene, camera, and renderer
-        function init() {
-            scene = new THREE.Scene();
-            clock = new THREE.Clock();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
+        // Game Variables
+        let bird = {
+            x: 50,
+            y: canvas.height / 2,
+            width: 20,
+            height: 20,
+            gravity: 0.5,
+            lift: -10,
+            velocity: 0,
+            color: '#FF0000' // Default color
+        };
 
-            // Set camera position
-            camera.position.set(0, 5, 15);
-            
-            // Lighting
-            let ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.5);
-            scene.add(ambientLight);
-            let directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1);
-            directionalLight.position.set(10, 10, 10);
-            scene.add(directionalLight);
+        let pipes = [];
+        let pipeWidth = 20;
+        let gap = 100;
+        let pipeInterval = 90;
+        let score = 0;
+        let gameOver = false;
 
-            // Add terrain with texture
-            createTerrain();
-            
-            // Add player (box as a simple player)
-            createPlayer();
+        let playerName = '';
+        let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
 
-            // Add mobs to the game
-            createMobs();
+        // Ask for the player's name when the page loads
+        function askForName() {
+            playerName = prompt("Enter your name to start the game:");
+            if (playerName.toLowerCase() === "zash") {
+                bird.color = "#FFD700"; // Special gold bird for Zash
+            }
+            resetGame();
+        }
 
-            // Check for mobile controls
-            if (isMobile) {
-                mobileControlsEnabled = true;
-                setupMobileControls();
+        // Update the leaderboard
+        function updateLeaderboard() {
+            leaderboard.push({ name: playerName, score: score });
+            leaderboard.sort((a, b) => b.score - a.score);
+            if (leaderboard.length > 5) {
+                leaderboard = leaderboard.slice(0, 5); // Keep top 5 scores
+            }
+            localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+            displayLeaderboard();
+        }
+
+        // Display the leaderboard
+        function displayLeaderboard() {
+            const leaderboardList = document.getElementById('leaderboardList');
+            leaderboardList.innerHTML = '';
+            leaderboard.forEach(entry => {
+                const li = document.createElement('li');
+                li.textContent = `${entry.name}: ${entry.score}`;
+                leaderboardList.appendChild(li);
+            });
+        }
+
+        // Event listener for jumping
+        document.addEventListener('keydown', () => {
+            if (!gameOver) {
+                bird.velocity = bird.lift;
             } else {
-                // Use keyboard for desktop
-                window.addEventListener('keydown', onKeyDown);
+                updateLeaderboard();
+                askForName();
+            }
+        });
+
+        // Game loop
+        function gameLoop() {
+            if (gameOver) return;
+
+            // Update bird position
+            bird.velocity += bird.gravity;
+            bird.y += bird.velocity;
+
+            // Check for collision with the ground or ceiling
+            if (bird.y + bird.height > canvas.height || bird.y < 0) {
+                gameOver = true;
             }
 
-            // Handle resizing
-            window.addEventListener('resize', onWindowResize);
-
-            // Start animation loop
-            animate();
-        }
-
-        // Create terrain with texture
-        function createTerrain() {
-            const terrainGeometry = new THREE.PlaneGeometry(500, 500, 50, 50);
-            const terrainMaterial = new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('https://www.w3schools.com/w3images/forest.jpg')  // Texture for terrain
-            });
-            terrain = new THREE.Mesh(terrainGeometry, terrainMaterial);
-            terrain.rotation.x = -Math.PI / 2; // Make the terrain flat
-            scene.add(terrain);
-        }
-
-        // Create player (cube or 3D model)
-        function createPlayer() {
-            const geometry = new THREE.BoxGeometry(1, 2, 1);
-            const material = new THREE.MeshBasicMaterial({ color: 0x0000ff });
-            player = new THREE.Mesh(geometry, material);
-            player.position.set(0, 1, 0);
-            scene.add(player);
-        }
-
-        // Create mobs
-        function createMobs() {
-            for (let i = 0; i < 5; i++) {
-                const geometry = new THREE.BoxGeometry(1, 1, 1);
-                const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-                const mob = new THREE.Mesh(geometry, material);
-                mob.position.set(Math.random() * 100 - 50, 0.5, Math.random() * 100 - 50);
-                scene.add(mob);
-                mobs.push(mob);
+            // Update pipes
+            if (pipes.length === 0 || pipes[pipes.length - 1].x <= canvas.width - pipeInterval) {
+                let pipeHeight = Math.floor(Math.random() * (canvas.height - gap));
+                pipes.push({
+                    x: canvas.width,
+                    topHeight: pipeHeight,
+                    bottomHeight: canvas.height - pipeHeight - gap
+                });
             }
-        }
 
-        // Handle keyboard input for movement (WASD for desktop)
-        function onKeyDown(event) {
-            switch (event.key) {
-                case 'w': case 'ArrowUp':
-                    player.position.z -= moveSpeed;
-                    break;
-                case 's': case 'ArrowDown':
-                    player.position.z += moveSpeed;
-                    break;
-                case 'a': case 'ArrowLeft':
-                    player.position.x -= moveSpeed;
-                    break;
-                case 'd': case 'ArrowRight':
-                    player.position.x += moveSpeed;
-                    break;
-                case ' ':
-                    if (player.position.y <= 1) { // Jump when player is on the ground
-                        velocityY = jumpHeight;
-                    }
-                    break;
-            }
-        }
+            pipes.forEach((pipe, index) => {
+                pipe.x -= 2;
 
-        // Mobile controls using onscreen buttons
-        function setupMobileControls() {
-            document.getElementById('moveForward').addEventListener('click', () => player.position.z -= moveSpeed);
-            document.getElementById('moveBackward').addEventListener('click', () => player.position.z += moveSpeed);
-            document.getElementById('moveLeft').addEventListener('click', () => player.position.x -= moveSpeed);
-            document.getElementById('moveRight').addEventListener('click', () => player.position.x += moveSpeed);
-            document.getElementById('jump').addEventListener('click', () => {
-                if (player.position.y <= 1) {
-                    velocityY = jumpHeight;
+                // Collision detection
+                if (
+                    bird.x + bird.width > pipe.x &&
+                    bird.x < pipe.x + pipeWidth &&
+                    (bird.y < pipe.topHeight || bird.y + bird.height > pipe.topHeight + gap)
+                ) {
+                    gameOver = true;
+                }
+
+                // Remove pipes that are off-screen
+                if (pipe.x + pipeWidth < 0) {
+                    pipes.splice(index, 1);
+                    score++;
                 }
             });
-        }
 
-        // Update player gravity and movement
-        function updatePlayer() {
-            // Gravity effect on player
-            if (player.position.y > 1) {
-                velocityY -= gravity;
-            } else {
-                velocityY = 0;
-                player.position.y = 1; // Prevent falling below ground level
+            // Draw everything
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = bird.color;
+            ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
+
+            pipes.forEach(pipe => {
+                ctx.fillStyle = '#00FF00';
+                ctx.fillRect(pipe.x, 0, pipeWidth, pipe.topHeight);
+                ctx.fillRect(pipe.x, pipe.topHeight + gap, pipeWidth, pipe.bottomHeight);
+            });
+
+            ctx.fillStyle = '#000000';
+            ctx.font = '20px Arial';
+            ctx.fillText('Score: ' + score, 10, 30);
+
+            if (gameOver) {
+                ctx.fillText('Game Over', canvas.width / 2 - 60, canvas.height / 2);
+                ctx.fillText('Press any key to restart', canvas.width / 2 - 90, canvas.height / 2 + 30);
             }
-            player.position.y += velocityY; // Apply gravity
+
+            requestAnimationFrame(gameLoop);
         }
 
-        // Move mobs randomly
-        function moveMobs() {
-            mobs.forEach(mob => {
-                let mobDirection = Math.random() * 4;
-                if (mobDirection < 1) {
-                    mob.position.x += mobSpeed;
-                } else if (mobDirection < 2) {
-                    mob.position.x -= mobSpeed;
-                } else if (mobDirection < 3) {
-                    mob.position.z += mobSpeed;
-                } else {
-                    mob.position.z -= mobSpeed;
-                }
-            });
+        // Reset the game
+        function resetGame() {
+            bird.y = canvas.height / 2;
+            bird.velocity = 0;
+            pipes = [];
+            score = 0;
+            gameOver = false;
+            gameLoop();
         }
 
-        // Check for collision with mobs
-        function checkCollision() {
-            mobs.forEach(mob => {
-                const distance = player.position.distanceTo(mob.position);
-                if (distance < 2) { // Simple collision detection radius
-                    mobSound.play(); // Play sound on collision
-                }
-            });
-        }
-
-        // Resize window handler
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
-            
-            // Update player physics
-            updatePlayer();
-            
-            // Move mobs
-            moveMobs();
-            
-            // Check for collisions
-            checkCollision();
-
-            renderer.render(scene, camera);
-        }
-
-        // Initialize the game
-        init();
+        // Start the game loop and ask for player's name
+        askForName();
     </script>
 </body>
 </html>
