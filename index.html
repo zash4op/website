@@ -90,6 +90,7 @@
         let pipeInterval = 90;
         let score = 0;
         let gameOver = false;
+        let gameStarted = false;
 
         let playerName = '';
         let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
@@ -103,7 +104,7 @@
             "You are never too old to set another goal or to dream a new dream."
         ];
 
-        // Ask for the player's name when the page loads
+        // Ask for the player's name when the page loads or when restarting
         function askForName() {
             playerName = prompt("Enter your name to start the game:");
             if (playerName.toLowerCase() === "zash") {
@@ -142,8 +143,11 @@
 
         // Event listener for jumping (touch event)
         document.addEventListener('touchstart', () => {
+            if (!gameStarted) {
+                gameStarted = true;  // Start the game when the player taps
+            }
             if (!gameOver) {
-                bird.velocity = bird.lift;
+                bird.velocity = bird.lift;  // Make the bird jump
             } else {
                 if (score > highScore) {
                     highScore = score;
@@ -151,12 +155,14 @@
                     displayQuote();
                 }
                 updateLeaderboard();
-                askForName();
+                askForName();  // Ask for username again after game over
             }
         });
 
         // Game loop
         function gameLoop() {
+            if (!gameStarted) return;  // Don't start the game until the player taps
+
             if (gameOver) return;
 
             // Update bird position
@@ -227,6 +233,7 @@
             pipes = [];
             score = 0;
             gameOver = false;
+            gameStarted = false;  // Don't start falling until tap
             gameLoop();
         }
 
